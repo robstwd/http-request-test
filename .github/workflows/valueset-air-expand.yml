@@ -39,5 +39,8 @@ jobs:
       - name: Check response
         env:
           RESOURCE: ${{ fromJson(steps.request.outputs.response).resourceType }}
-        run: echo $RESOURCE
-        if: ${{ env.RESOURCE == 'ValueNotSet' }}
+        if: ${{ env.RESOURCE != 'ValueSet' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('The FHIR server response is not a ValueSet resource!')
