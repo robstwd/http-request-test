@@ -39,7 +39,7 @@ jobs:
       - name: Check response
         env:
           RESOURCE: ${{ fromJson(steps.request.outputs.response).resourceType }}
-        if: ${{ env.RESOURCE != 'ValueSet' }}
+        if: ${{ env.RESOURCE != 'ValueSetSet' }}
         uses: actions/github-script@v3
         with:
           script: |
