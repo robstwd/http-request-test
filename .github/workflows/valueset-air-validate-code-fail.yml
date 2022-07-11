@@ -1,0 +1,38 @@
+name: ValueSet $validate-code a non-existing code in 'Australian Immunisation Register Vaccine' CodeSystem
+
+on: 
+  [push, pull_request]
+  
+jobs:
+
+  request:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - name: check out repo under $GITHUB_WORKSPACE
+        uses: actions/checkout@v3
+
+      - name: POST to http://tx.fhir.org
+        id: request
+        uses: fjogeleit/http-request-action@v1.9.2
+        
+        with:
+          url: 'http://tx.fhir.org/r4/ValueSet/$validate-code'
+          method: 'POST'
+          contentType: 'application/fhir+json'
+          file: "${{ github.workspace }}/REST/parameter-air-validate-code-fail.json"
+
+      - name: Print the response payload
+        run: echo ${{ steps.request.outputs.response }}
+        shell: bash
+
+      - name: Check response
+        env:
+          RESULT: ${{ fromJson(steps.request.outputs.response).parameter[3].valueBoolean }}
+        if: ${{ env.RESULT != 'true' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('The FHIR server response is not result = true!')
