@@ -1,4 +1,4 @@
-name: Programmatically expand 'NCTIS Data Components' CodeSystem
+name: ValueSet $expand on 'NCTIS Data Components' CodeSystem
 
 on: 
   [push, pull_request]
