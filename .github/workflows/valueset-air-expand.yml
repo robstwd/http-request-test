@@ -40,4 +40,4 @@ jobs:
         env:
           RESOURCE: ${{ fromJson(steps.request.outputs.response).resourceType }}
         run: echo $RESOURCE
-        if: ${{ $RESOURCE == "ValueSet" }}
+        if: ${{ env.RESOURCE == "ValueSet" }}
