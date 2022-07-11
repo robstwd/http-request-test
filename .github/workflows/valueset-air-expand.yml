@@ -5,7 +5,7 @@ on:
   
 jobs:
 
-  request:
+  ValueSet-expand:
 
     runs-on: ubuntu-latest
 
@@ -39,7 +39,7 @@ jobs:
       - name: Check response
         env:
           RESOURCE: ${{ fromJson(steps.request.outputs.response).resourceType }}
-        if: ${{ env.RESOURCE != 'ValueSetSet' }}
+        if: ${{ env.RESOURCE != 'ValueSet' }}
         uses: actions/github-script@v3
         with:
           script: |
