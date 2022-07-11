@@ -39,6 +39,5 @@ jobs:
       - name: Check response
         env:
           RESOURCE: ${{ fromJson(steps.request.outputs.response).resourceType }}
-        run: |
-          echo $RESOURCE
-          if: ${{ $RESOURCE == "ValueSet" }}
+        run: echo $RESOURCE
+        if: ${{ $RESOURCE == "ValueSet" }}
