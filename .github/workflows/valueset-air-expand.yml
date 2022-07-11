@@ -26,3 +26,12 @@ jobs:
 
       - name: Print the response status
         run: echo ${{ steps.request.outputs.status }}}
+        shell: bash
+
+      - name: Print the response headers
+        run: echo ${{ steps.request.outputs.headers }}
+        shell: bash
+
+      - name: Print the response payload
+        run: echo ${{ steps.request.outputs.response }}
+        shell: bash
