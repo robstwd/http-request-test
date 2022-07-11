@@ -31,7 +31,6 @@ jobs:
       - name: Check response
         env:
           RESULT: ${{ fromJson(steps.request.outputs.response).parameter[3].valueBoolean }}
-        run: echo $RESULT
         if: ${{ env.RESULT != 'true' }}
         uses: actions/github-script@v3
         with:
