@@ -1,0 +1,46 @@
+name: Programmatically expand 'NCTIS Data Components' CodeSystem
+
+on: 
+  [push, pull_request]
+  
+jobs:
+
+  ValueSet-expand:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - name: check out repo under $GITHUB_WORKSPACE
+        uses: actions/checkout@v3
+
+      - name: POST to http://tx.fhir.org
+        id: request
+        uses: CamiloGarciaLaRotta/watermelon-http-client@v1.5
+        
+        with:
+          url: 'http://tx.fhir.org/r4/ValueSet/$expand'
+          method: post
+          headers: '{"content-type": "application/fhir+json"}'
+          data: '{"resourceType": "Parameters","parameter": [{"name": "valueSet","resource": {"resourceType": "ValueSet","status": "unknown","compose": {"include": [{"system": "https://healthterminologies.gov.au/fhir/CodeSystem/nctis-data-components-1"}]}}}]}'
+
+      - name: Print the response status
+        run: echo ${{ steps.request.outputs.status }}}
+        shell: bash
+
+      - name: Print the response headers
+        run: echo ${{ steps.request.outputs.headers }}
+        shell: bash
+
+      - name: Print the response payload
+        run: echo ${{ steps.request.outputs.response }}
+        shell: bash
+        
+      - name: Check response
+        env:
+          RESOURCE: ${{ fromJson(steps.request.outputs.response).resourceType }}
+        if: ${{ env.RESOURCE != 'ValueSet' }}
+        uses: actions/github-script@v3
+        with:
+          script: |
+              core.setFailed('The FHIR server response is not a ValueSet resource!')
