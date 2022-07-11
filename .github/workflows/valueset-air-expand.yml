@@ -1,0 +1,28 @@
+name: Programmatically expand 'Australian Immunisation Register Vaccine' CodeSystem
+
+on: 
+  [push, pull_request]
+  
+jobs:
+
+  request:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - name: check out repo under $GITHUB_WORKSPACE
+        uses: actions/checkout@v3
+
+      - name: POST to http://tx.fhir.org
+        id: request
+        uses: CamiloGarciaLaRotta/watermelon-http-client@v1.5
+        
+        with:
+          url: 'http://tx.fhir.org/r4/ValueSet/$expand'
+          method: post
+          contentType: 'application/fhir+json'
+          data: '{"resourceType": "Parameters","parameter": [{"name": "valueSet","resource": {"resourceType": "ValueSet","status": "unknown","compose": {"include": [{"system": "https://www.humanservices.gov.au/organisations/health-professionals/enablers/air-vaccine-code-formats"}]}}}]}'
+
+      - name: Print the response status
+        run: echo ${{ steps.request.outputs.status }}}
